@@ -72,7 +72,7 @@ class MemberContainer
      */
     public function onAliasSaveCallback($value, $dc = null)
     {
-        if (!isset($this->bundleConfig['enabled_member_alias']) || true !== $this->bundleConfig['enabled_member_alias']) {
+        if (!isset($this->bundleConfig['enable_member_alias']) || true !== $this->bundleConfig['enable_member_alias']) {
             return $value;
         }
 
@@ -83,7 +83,11 @@ class MemberContainer
         // Generate alias if there is none
         if (!$value) {
             $parts = array_filter([$dc->activeRecord->academicTitle, $dc->activeRecord->firstname, $dc->activeRecord->nobilityTitle, $dc->activeRecord->lastname]);
-            $value = $this->slug->generate(implode(',', $parts), [], $aliasExists);
+
+            if (empty($parts)) {
+                $parts = ($dc->activeRecord->username ? [$dc->activeRecord->username] : [$dc->id]);
+            }
+            $value = $this->slug->generate(implode(',', $parts), [], $aliasExists, 'member-');
         } elseif (preg_match('/^[1-9]\d*$/', $value)) {
             throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['aliasNumeric'], $value));
         } elseif ($aliasExists($value)) {

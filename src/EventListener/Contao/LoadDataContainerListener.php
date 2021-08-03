@@ -32,7 +32,7 @@ class LoadDataContainerListener
 
     private function addAliasField(): void
     {
-        if (!isset($this->bundleConfig['enabled_member_alias']) || true !== $this->bundleConfig['enabled_member_alias']) {
+        if (!isset($this->bundleConfig['enable_member_alias']) || true !== $this->bundleConfig['enable_member_alias']) {
             return;
         }
 
@@ -41,9 +41,6 @@ class LoadDataContainerListener
             'search' => true,
             'inputType' => 'text',
             'eval' => ['rgxp' => 'alias', 'doNotCopy' => true, 'unique' => true, 'maxlength' => 255, 'tl_class' => 'w50 clr'],
-            'save_callback' => [
-                ['tl_news', 'generateAlias'],
-            ],
             'sql' => "varchar(255) BINARY NOT NULL default ''",
         ];
     }

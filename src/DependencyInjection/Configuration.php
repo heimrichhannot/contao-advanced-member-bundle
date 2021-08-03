@@ -19,7 +19,7 @@ class Configuration implements ConfigurationInterface
 
         $treeBuilder->getRootNode()
             ->children()
-                ->booleanNode('enabled_member_alias')
+                ->booleanNode('enable_member_alias')
                     ->defaultFalse()
                     ->info('Enable to add an alias field to member entity.')
                 ->end()
