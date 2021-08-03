@@ -8,10 +8,12 @@
 
 namespace HeimrichHannot\AdvancedMemberBundle\EventListener\Contao;
 
+use Contao\CoreBundle\DataContainer\PaletteManipulator;
 use Contao\CoreBundle\ServiceAnnotation\Hook;
+use HeimrichHannot\AdvancedMemberBundle\DataContainer\MemberContainer;
 
 /**
- * @Hook("loadDataContainer")
+ * @Hook("loadDataContainer", priority=1)
  */
 class LoadDataContainerListener
 {
@@ -27,7 +29,9 @@ class LoadDataContainerListener
 
     public function __invoke(string $table): void
     {
-        $this->addAliasField();
+        if ('tl_member' === $table) {
+            $this->addAliasField();
+        }
     }
 
     private function addAliasField(): void
@@ -36,10 +40,17 @@ class LoadDataContainerListener
             return;
         }
 
+        PaletteManipulator::create()
+            ->addField('alias', 'personal_legend', PaletteManipulator::POSITION_APPEND)
+            ->applyToPalette('default', 'tl_member');
+
         $GLOBALS['TL_DCA']['tl_member']['fields']['alias'] = [
             'exclude' => true,
             'search' => true,
             'inputType' => 'text',
+            'save_callback' => [
+                [MemberContainer::class, 'onAliasSaveCallback'],
+            ],
             'eval' => ['rgxp' => 'alias', 'doNotCopy' => true, 'unique' => true, 'maxlength' => 255, 'tl_class' => 'w50 clr'],
             'sql' => "varchar(255) BINARY NOT NULL default ''",
         ];

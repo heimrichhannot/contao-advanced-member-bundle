@@ -25,16 +25,11 @@ class MemberContainer
      * @var Slug
      */
     protected $slug;
-    /**
-     * @var array
-     */
-    protected $bundleConfig;
 
-    public function __construct(Connection $connection, Slug $slug, array $bundleConfig)
+    public function __construct(Connection $connection, Slug $slug)
     {
         $this->connection = $connection;
         $this->slug = $slug;
-        $this->bundleConfig = $bundleConfig;
     }
 
     /**
@@ -65,17 +60,15 @@ class MemberContainer
     }
 
     /**
-     * @Callback(table="tl_member", target="fields.alias.save")
+     * alias field save callback.
      *
      * @param string             $value
      * @param DataContainer|null $dc
+     *
+     * @return mixed|string
      */
     public function onAliasSaveCallback($value, $dc = null)
     {
-        if (!isset($this->bundleConfig['enable_member_alias']) || true !== $this->bundleConfig['enable_member_alias']) {
-            return $value;
-        }
-
         $aliasExists = function (string $alias) use ($dc): bool {
             return $this->connection->executeStatement('SELECT id FROM tl_member WHERE alias=? AND id!=?', [$alias, $dc->id]) > 0;
         };
