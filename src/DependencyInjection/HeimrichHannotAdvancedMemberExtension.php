@@ -15,6 +15,8 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
 class HeimrichHannotAdvancedMemberExtension extends Extension
 {
+    const ALIAS = 'huh_advanced_member';
+
     public function load(array $configs, ContainerBuilder $container)
     {
         $loader = new YamlFileLoader(
@@ -22,5 +24,14 @@ class HeimrichHannotAdvancedMemberExtension extends Extension
             new FileLocator(__DIR__.'/../../config')
         );
         $loader->load('services.yml');
+
+        $configuration = new Configuration();
+        $config = $this->processConfiguration($configuration, $configs);
+        $container->setParameter(self::ALIAS, $config);
+    }
+
+    public function getAlias()
+    {
+        return self::ALIAS;
     }
 }

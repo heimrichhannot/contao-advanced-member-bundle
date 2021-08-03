@@ -9,9 +9,11 @@
 namespace HeimrichHannot\AdvancedMemberBundle\DataContainer;
 
 use Contao\CoreBundle\ServiceAnnotation\Callback;
+use Contao\CoreBundle\Slug\Slug;
 use Contao\DataContainer;
 use Contao\MemberModel;
 use Doctrine\DBAL\Connection;
+use Exception;
 
 class MemberContainer
 {
@@ -19,10 +21,20 @@ class MemberContainer
      * @var Connection
      */
     protected $connection;
+    /**
+     * @var Slug
+     */
+    protected $slug;
+    /**
+     * @var array
+     */
+    protected $bundleConfig;
 
-    public function __construct(Connection $connection)
+    public function __construct(Connection $connection, Slug $slug, array $bundleConfig)
     {
         $this->connection = $connection;
+        $this->slug = $slug;
+        $this->bundleConfig = $bundleConfig;
     }
 
     /**
@@ -47,6 +59,35 @@ class MemberContainer
         if ('1' === $member->login && 0 != $member->huhAdvMemberLocked) {
             $member->huhAdvMemberLocked = 0;
             $member->save();
+        }
+
+        return $value;
+    }
+
+    /**
+     * @Callback(table="tl_member", target="fields.alias.save")
+     *
+     * @param string             $value
+     * @param DataContainer|null $dc
+     */
+    public function onAliasSaveCallback($value, $dc = null)
+    {
+        if (!isset($this->bundleConfig['enabled_member_alias']) || true !== $this->bundleConfig['enabled_member_alias']) {
+            return $value;
+        }
+
+        $aliasExists = function (string $alias) use ($dc): bool {
+            return $this->connection->executeStatement('SELECT id FROM tl_member WHERE alias=? AND id!=?', [$alias, $dc->id]) > 0;
+        };
+
+        // Generate alias if there is none
+        if (!$value) {
+            $parts = array_filter([$dc->activeRecord->academicTitle, $dc->activeRecord->firstname, $dc->activeRecord->nobilityTitle, $dc->activeRecord->lastname]);
+            $value = $this->slug->generate(implode(',', $parts), [], $aliasExists);
+        } elseif (preg_match('/^[1-9]\d*$/', $value)) {
+            throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['aliasNumeric'], $value));
+        } elseif ($aliasExists($value)) {
+            throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['aliasExists'], $value));
         }
 
         return $value;
