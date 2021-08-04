@@ -4,6 +4,7 @@ This bundle enhances the contao member entity.
 
 ## Features
 
+- option to add a member alias
 - Lock member login command
 
 ## Usage
@@ -15,6 +16,18 @@ This bundle enhances the contao member entity.
         composer require heimrichhannot/contao-advanced-member-bundle
 
 2. Update database
+
+### Member alias
+
+![](docs/images/screenshot_alias.png)
+
+Set `huh_advanced_member.enable_member_alias` to `true` and update the database, to enable member aliase. 
+
+```yaml
+# config/config.yml
+huh_advanced_member:
+    enable_member_alias:  true
+```
 
 ### Lock member logins
 
@@ -47,4 +60,14 @@ Help:
   If you want to check how many members will be locked before, you can use the dry-run option:
   
   php ./vendor/bin/contao-console huh:member:lock-login lock --dry-run
+```
+
+## Configuration reference
+
+```yaml
+# Default configuration for extension with alias: "huh_advanced_member"
+huh_advanced_member:
+
+    # Enable to add an alias field to member entity.
+    enable_member_alias:  false
 ```

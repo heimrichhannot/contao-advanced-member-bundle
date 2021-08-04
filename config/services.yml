@@ -3,6 +3,8 @@ services:
     autoconfigure: true
     autowire: true
     public: false
+    bind:
+      $bundleConfig: "%huh_advanced_member%"
 
   HeimrichHannot\AdvancedMemberBundle\:
-    resource: "../src/{Command,DataContainer}/*"
+    resource: "../src/{Command,DataContainer,EventListener}/*"
