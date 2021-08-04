@@ -80,7 +80,7 @@ class MemberContainer
             if (empty($parts)) {
                 $parts = ($dc->activeRecord->username ? [$dc->activeRecord->username] : [$dc->id]);
             }
-            $value = $this->slug->generate(implode(',', $parts), [], $aliasExists, 'member-');
+            $value = $this->slug->generate(implode('-', $parts), [], $aliasExists, 'member-');
         } elseif (preg_match('/^[1-9]\d*$/', $value)) {
             throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['aliasNumeric'], $value));
         } elseif ($aliasExists($value)) {
