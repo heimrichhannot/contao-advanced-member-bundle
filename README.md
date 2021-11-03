@@ -1,10 +1,13 @@
 # Contao Advanced Member Bundle
 
-This bundle enhances the contao member entity.
+This bundle enhances the contao member entity with additional fields and functions. 
+All features are optional and must be activated or explicitly used, so just pick
+the functionality you need.
 
 ## Features
 
 - option to add a member alias
+- option to add additional member fields
 - Lock member login command
 
 ## Usage
@@ -28,6 +31,42 @@ Set `huh_advanced_member.enable_member_alias` to `true` and update the database,
 huh_advanced_member:
     enable_member_alias:  true
 ```
+
+### Additional fields
+
+This bundle can add some often needed additional fields to the member entity. 
+
+There are 4 categories of fields that you can activate in your configuration:
+
+```yaml
+huh_advanced_member:
+  enable_additional_title_fields: true
+  enable_additional_job_fields: true
+  enable_image_fields: true
+  enable_social_fields: true
+```
+
+**Title fields:**
+* academicTitle
+* extendedTitle
+* nobilityTitle
+* academicDegree
+
+**Job fields:**
+* jobTitles
+* position
+
+**Image fields**
+* addImage
+* singleSRC (in addImage subpalette)
+* caption (in addImage subpalette)
+
+**Social fields**
+* linkedinProfile
+* xingProfile
+* facebookProfile
+* twitterProfile
+
 
 ### Lock member logins
 
@@ -68,6 +107,18 @@ Help:
 # Default configuration for extension with alias: "huh_advanced_member"
 huh_advanced_member:
 
-    # Enable to add an alias field to member entity.
-    enable_member_alias:  false
+   # Enable to add an alias field to member entity.
+   enable_member_alias:  false
+
+   # Enable to add additional title fields to member entity.
+   enable_additional_title_fields: false
+
+   # Enable to add additional job fields to member entity.
+   enable_additional_job_fields: false
+
+   # Enable to add image fields to member entity.
+   enable_image_fields:  false
+
+   # Enable to add social fields to member entity.
+   enable_social_fields: false
 ```

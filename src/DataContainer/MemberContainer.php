@@ -12,8 +12,11 @@ use Contao\CoreBundle\ServiceAnnotation\Callback;
 use Contao\CoreBundle\Slug\Slug;
 use Contao\DataContainer;
 use Contao\MemberModel;
+use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
 use Exception;
+use HeimrichHannot\Haste\Util\Validator;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class MemberContainer
 {
@@ -25,11 +28,16 @@ class MemberContainer
      * @var Slug
      */
     protected $slug;
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
 
-    public function __construct(Connection $connection, Slug $slug)
+    public function __construct(Connection $connection, Slug $slug, TranslatorInterface $translator)
     {
         $this->connection = $connection;
         $this->slug = $slug;
+        $this->translator = $translator;
     }
 
     /**
@@ -88,5 +96,32 @@ class MemberContainer
         }
 
         return $value;
+    }
+
+    public function onJobTitlesOptionsCallback(): array
+    {
+        $choices = [];
+
+        $result = $this->connection->executeQuery('SELECT jobTitles FROM tl_member WHERE jobTitles IS NOT NULL');
+
+        while ($jobTitles = $result->fetchOne()) {
+            $jobTitles = StringUtil::deserialize($jobTitles, true);
+            $choices = array_merge($choices, $jobTitles);
+        }
+
+        $choices = array_unique(array_filter($choices));
+        sort($choices);
+        return $choices;
+    }
+
+    public function validateUrl(string $varValue, DataContainer $dc): string
+    {
+        if (empty($varValue)) {
+            return $varValue;
+        } elseif (!preg_match('~^https?://~i', $varValue) || !Validator::isUrl($varValue)) {
+            throw new Exception($this->translator->trans('ERR.url', [$varValue], 'contao_default'));
+        }
+
+        return $varValue;
     }
 }
