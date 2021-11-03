@@ -29,6 +29,42 @@ huh_advanced_member:
     enable_member_alias:  true
 ```
 
+### Additional fields
+
+This bundle can add some often needed additional fields to the member entity. 
+
+There are 4 categories of fields that you can activate in your configuration:
+
+```yaml
+huh_advanced_member:
+  enable_additional_title_fields: true
+  enable_additional_job_fields: true
+  enable_image_fields: true
+  enable_social_fields: true
+```
+
+**Title fields:**
+* academicTitle
+* extendedTitle
+* nobilityTitle
+* academicDegree
+
+**Job fields:**
+* jobTitles
+* position
+
+**Image fields**
+* addImage
+* singleSRC (in addImage subpalette)
+* caption (in addImage subpalette)
+
+**Social fields**
+* linkedinProfile
+* xingProfile
+* facebookProfile
+* twitterProfile
+
+
 ### Lock member logins
 
 To lock or unlock the login for all members, use the `huh:member:lock-login` command.
