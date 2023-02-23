@@ -3,6 +3,9 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.5] - 2023-02-23
+- Fixed: wrong validator class usage ([#3])
+
 ## [0.1.4] - 2021-11-03
 - Added: option to add additional member fields ([#2])
 
@@ -20,5 +23,6 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - Added: lock member login command
 
 
+[#3]: https://github.com/heimrichhannot/contao-advanced-member-bundle/issues/3
 [#2]: https://github.com/heimrichhannot/contao-advanced-member-bundle/pull/2
 [#1]: https://github.com/heimrichhannot/contao-advanced-member-bundle/pull/1

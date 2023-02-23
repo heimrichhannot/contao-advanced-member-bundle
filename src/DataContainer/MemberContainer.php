@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2021 Heimrich & Hannot GmbH
+ * Copyright (c) 2023 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -13,9 +13,9 @@ use Contao\CoreBundle\Slug\Slug;
 use Contao\DataContainer;
 use Contao\MemberModel;
 use Contao\StringUtil;
+use Contao\Validator;
 use Doctrine\DBAL\Connection;
 use Exception;
-use HeimrichHannot\Haste\Util\Validator;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class MemberContainer
@@ -111,6 +111,7 @@ class MemberContainer
 
         $choices = array_unique(array_filter($choices));
         sort($choices);
+
         return $choices;
     }
 
