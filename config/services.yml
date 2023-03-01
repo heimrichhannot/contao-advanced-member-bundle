@@ -8,3 +8,9 @@ services:
 
   HeimrichHannot\AdvancedMemberBundle\:
     resource: "../src/{Command,DataContainer,EventListener}/*"
+
+  HeimrichHannot\AdvancedMemberBundle\DataContainer\MemberContainer:
+    public: true
+
+  HeimrichHannot\AdvancedMemberBundle\DataContainer\MemberGroupContainer:
+    public: true

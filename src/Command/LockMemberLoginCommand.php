@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2021 Heimrich & Hannot GmbH
+ * Copyright (c) 2023 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -19,6 +19,8 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class LockMemberLoginCommand extends Command
 {
     public static $defaultName = 'huh:member:lock-login';
+    public static $defaultDescription = 'This command locks or unlocks the member login.';
+
     /**
      * @var Connection
      */
@@ -41,7 +43,7 @@ class LockMemberLoginCommand extends Command
     protected function configure()
     {
         $this
-            ->setDescription('This command locks or unlocks the member login.')
+            ->setDescription(static::$defaultDescription)
             ->setHelp(
                 "This command disables (or restore) the login option for all members.\n\n"
                 ."The following statement disables the login for all members:\n\n"
@@ -162,7 +164,7 @@ class LockMemberLoginCommand extends Command
             }
 
             if ($result < 1) {
-                $this->io->note('Could not update member with id '.$members.'!');
+                $this->io->note('Could not update member with id '.$member.'!');
             } else {
                 ++$count;
             }

@@ -6,7 +6,7 @@ the functionality you need.
 
 ## Features
 
-- option to add a member alias
+- option to add member and member group aliases
 - option to add additional member fields
 - Lock member login command
 
@@ -22,15 +22,21 @@ the functionality you need.
 
 ### Member alias
 
-![](docs/images/screenshot_alias.png)
+![](docs/images/screenshot_member_alias.png)
 
-Set `huh_advanced_member.enable_member_alias` to `true` and update the database, to enable member aliase. 
+Set `huh_advanced_member.enable_member_alias` to `true` and update the database, to enable member aliases. 
 
 ```yaml
 # config/config.yml
 huh_advanced_member:
     enable_member_alias:  true
 ```
+
+### Member group alias
+
+![](docs/images/screenshot_member_group_alias.png)
+
+Set `huh_advanced_member.enable_member_group_alias` to `true` and update the database, to enable member group aliases.
 
 ### Additional fields
 
@@ -110,6 +116,9 @@ huh_advanced_member:
    # Enable to add an alias field to member entity.
    enable_member_alias:  false
 
+   # Enable to add an alias field to member group entity.
+   enable_member_group_alias: false
+
    # Enable to add additional title fields to member entity.
    enable_additional_title_fields: false
 
@@ -121,4 +130,5 @@ huh_advanced_member:
 
    # Enable to add social fields to member entity.
    enable_social_fields: false
+
 ```
