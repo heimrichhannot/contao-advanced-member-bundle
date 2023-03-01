@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2021 Heimrich & Hannot GmbH
+ * Copyright (c) 2023 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -22,6 +22,10 @@ class Configuration implements ConfigurationInterface
                 ->booleanNode('enable_member_alias')
                     ->defaultFalse()
                     ->info('Enable to add an alias field to member entity.')
+                ->end()
+                ->booleanNode('enable_member_group_alias')
+                    ->defaultFalse()
+                    ->info('Enable to add an alias field to member group entity.')
                 ->end()
                 ->booleanNode('enable_additional_title_fields')
                     ->defaultFalse()

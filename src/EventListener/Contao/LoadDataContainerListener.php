@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2021 Heimrich & Hannot GmbH
+ * Copyright (c) 2023 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -12,6 +12,7 @@ use Contao\Controller;
 use Contao\CoreBundle\DataContainer\PaletteManipulator;
 use Contao\CoreBundle\ServiceAnnotation\Hook;
 use HeimrichHannot\AdvancedMemberBundle\DataContainer\MemberContainer;
+use HeimrichHannot\AdvancedMemberBundle\DataContainer\MemberGroupContainer;
 
 /**
  * @Hook("loadDataContainer", priority=1)
@@ -31,15 +32,19 @@ class LoadDataContainerListener
     public function __invoke(string $table): void
     {
         if ('tl_member' === $table) {
-            $this->addAliasField();
+            $this->addMemberAliasField();
             $this->addAdditionalTitleFields();
             $this->addAdditionalJobTitles();
             $this->addImageFields();
             $this->addSocialFields();
         }
+
+        if ('tl_member_group' === $table) {
+            $this->addMemberGroupAliasField();
+        }
     }
 
-    private function addAliasField(): void
+    private function addMemberAliasField(): void
     {
         if (!isset($this->bundleConfig['enable_member_alias']) || true !== $this->bundleConfig['enable_member_alias']) {
             return;
@@ -49,16 +54,21 @@ class LoadDataContainerListener
             ->addField('alias', 'personal_legend', PaletteManipulator::POSITION_APPEND)
             ->applyToPalette('default', 'tl_member');
 
-        $GLOBALS['TL_DCA']['tl_member']['fields']['alias'] = [
-            'exclude' => true,
-            'search' => true,
-            'inputType' => 'text',
-            'save_callback' => [
-                [MemberContainer::class, 'onAliasSaveCallback'],
-            ],
-            'eval' => ['rgxp' => 'alias', 'doNotCopy' => true, 'unique' => true, 'maxlength' => 255, 'tl_class' => 'w50 clr'],
-            'sql' => "varchar(255) BINARY NOT NULL default ''",
-        ];
+        $this->getAliasFieldDefinition('tl_member', [MemberContainer::class, 'onAliasSaveCallback']);
+        $GLOBALS['TL_DCA']['tl_member']['fields']['alias']['eval']['tl_class'] .= ' clr';
+    }
+
+    private function addMemberGroupAliasField(): void
+    {
+        if (!isset($this->bundleConfig['enable_member_group_alias']) || true !== $this->bundleConfig['enable_member_group_alias']) {
+            return;
+        }
+
+        PaletteManipulator::create()
+            ->addField('alias', 'title_legend', PaletteManipulator::POSITION_APPEND)
+            ->applyToPalette('default', 'tl_member_group');
+
+        $this->getAliasFieldDefinition('tl_member_group', [MemberGroupContainer::class, 'onAliasSaveCallback']);
     }
 
     private function addAdditionalTitleFields(): void
@@ -252,5 +262,17 @@ class LoadDataContainerListener
         ];
 
         $GLOBALS['TL_DCA']['tl_member']['fields'] = array_merge($GLOBALS['TL_DCA']['tl_member']['fields'], $fields);
+    }
+
+    private function getAliasFieldDefinition(string $table, $saveCallback): void
+    {
+        $GLOBALS['TL_DCA'][$table]['fields']['alias'] = [
+            'exclude' => true,
+            'search' => true,
+            'inputType' => 'text',
+            'save_callback' => [$saveCallback],
+            'eval' => ['rgxp' => 'alias', 'doNotCopy' => true, 'unique' => true, 'maxlength' => 255, 'tl_class' => 'w50'],
+            'sql' => "varchar(255) BINARY NOT NULL default ''",
+        ];
     }
 }
